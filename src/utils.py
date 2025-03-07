@@ -1,0 +1,68 @@
+from bs4 import BeautifulSoup
+import re
+import pandas as pd
+
+def clean_html_tags(data: str) -> str:
+    """Remove HTML tags from textual data"""
+    if not isinstance(data, str):
+        return data  
+        
+    if not data:
+        return
+    
+    soup = BeautifulSoup(data, "html.parser")
+    return soup.get_text()
+
+def remove_hashtags(text: str) -> str:
+    """Remove hashtags from textual data"""
+    if not isinstance(text, str):
+        return text
+        
+    if not text:
+        return
+    
+    return re.sub(r"#\w+", "", text)
+
+def count_separator_rows(patterns: list, column: pd.Series) -> int:
+    """
+    Count rows in column with with specified separators. 
+    Prints the total number of rows in the column, the number of rows with each separator and the total number of rows with any of the separators.
+    """
+    
+    column_len = len(column)
+    print(f"Number of rows in column: {column_len}")
+
+    rows_with_pattern_separators = {}
+    for pattern in patterns:
+        rows_with_pattern_separator = column.str.contains(pattern, regex=True, na=False)
+        rows_with_pattern_separators[pattern] = rows_with_pattern_separator
+        print(f"Number of rows with {repr(pattern)} separator: {rows_with_pattern_separator.sum()}")
+        
+    # series of false with len of step_column. we use OR on it and count the number of rows with any of the separators listed
+    rows_with_either = pd.Series([False] * column_len)
+
+    for pattern, pattern_matches in rows_with_pattern_separators.items():
+        rows_with_either = rows_with_either | pattern_matches
+        
+    count_either = rows_with_either.sum()
+    print(f"Number of rows with either ',.' or newlines: {count_either}")
+    
+    return count_either
+
+def split_steps(steps: str, separators: list, ends_with_dot: bool = True) -> list:
+    """Split textual data into a list based on provided separators."""
+    if not isinstance(steps, str):
+        return steps
+    
+    pattern = "|".join(separators)
+    steps_list = re.split(pattern, steps)
+    
+    # ensure consistency, all steps end with a dot
+    steps_list = [step.strip() for step in steps_list if step.strip()]
+    
+    if ends_with_dot:
+        for i in range(len(steps_list)):
+            if not steps_list[i].endswith('.'):
+                steps_list[i] += '.'
+    
+    return steps_list
