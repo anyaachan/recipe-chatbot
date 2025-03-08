@@ -3,7 +3,9 @@ import re
 import pandas as pd
 
 def clean_html_tags(data: str) -> str:
-    """Remove HTML tags from textual data"""
+    """
+    Remove HTML tags from textual data
+    """
     if not isinstance(data, str):
         return data  
         
@@ -50,7 +52,9 @@ def count_separator_rows(patterns: list, column: pd.Series) -> int:
     return count_either
 
 def split_steps(steps: str, separators: list, ends_with_dot: bool = True) -> list:
-    """Split textual data into a list based on provided separators."""
+    """
+    Split textual data into a list based on provided separators.
+    """
     if not isinstance(steps, str):
         return steps
     
@@ -66,3 +70,17 @@ def split_steps(steps: str, separators: list, ends_with_dot: bool = True) -> lis
                 steps_list[i] += '.'
     
     return steps_list
+
+def find_max_len_doc(docs: list) -> tuple:
+    """
+    Find the document with the maximum length, in characters.
+    """
+    max_length = 0
+    max_index = 0
+    for i, doc in enumerate(docs):
+        length = len(doc.page_content)
+        if length > max_length:
+            max_length = length
+            max_index = i
+            
+    return max_length, max_index
