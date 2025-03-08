@@ -4,7 +4,7 @@ import pandas as pd
 
 def clean_html_tags(data: str) -> str:
     """
-    Remove HTML tags from textual data
+    Remove HTML tags from textual data.
     """
     if not isinstance(data, str):
         return data  
@@ -16,7 +16,9 @@ def clean_html_tags(data: str) -> str:
     return soup.get_text()
 
 def remove_hashtags(text: str) -> str:
-    """Remove hashtags from textual data"""
+    """
+    Remove hashtags from textual data.
+    """
     if not isinstance(text, str):
         return text
         
@@ -27,7 +29,8 @@ def remove_hashtags(text: str) -> str:
 
 def count_separator_rows(patterns: list, column: pd.Series) -> int:
     """
-    Count rows in column with with specified separators. 
+    Count rows in column with specified separators. 
+    
     Prints the total number of rows in the column, the number of rows with each separator and the total number of rows with any of the separators.
     """
     
@@ -84,3 +87,9 @@ def find_max_len_doc(docs: list) -> tuple:
             max_index = i
             
     return max_length, max_index
+
+def format_doc_for_display(doc: str) -> str:
+    """
+    Format document for display by chatbot.
+    """
+    return doc

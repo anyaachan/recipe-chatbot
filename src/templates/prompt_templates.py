@@ -1,10 +1,8 @@
 RAG_PROMPT_TEMPLATE = """You are a smart kitchen assistant specializing in helping users with recipes. You have access to a collection of recipes. Your goal is to provide accurate, relevant, and user-friendly responses based on the retrieved recipes.
 
 # Context:
-- User Query: 
-{user_query}
 - Retrieved Recipe Data: 
-{retrieved_recipes}
+{context}
 - Conversation History: 
 {chat_history}
 
