@@ -93,3 +93,16 @@ def format_doc_for_display(doc: str) -> str:
     Format document for display by chatbot.
     """
     return doc
+
+def format_dictionary_pairs(dictionary: dict, number_of_last_pairs: int = 20) -> str:
+    """
+    Format dictionary pairs for integration into LLM context.
+    """
+    formatted_pairs = ""
+    items = list(dictionary.items())
+    last_n_items = items[-number_of_last_pairs:] if len(items) > number_of_last_pairs else items
+    
+    for key, value in last_n_items:
+        formatted_pairs += f"Question:{key}. Answer: {value}\n\n"
+    
+    return formatted_pairs
