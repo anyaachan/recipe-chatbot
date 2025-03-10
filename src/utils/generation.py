@@ -1,6 +1,7 @@
 
 import requests
 from src.config import OPENROUTER_API_KEY
+import json
 
 def call_llm_openrouter(prompt:str, 
                         model_name:str,
@@ -52,4 +53,12 @@ def call_llm_openrouter(prompt:str,
     if json_schema is None:
         return response.json()["choices"][0]["message"]["content"]
     else:
-        return response.json()
+        return_dict = {}
+        content_str = response.json()["choices"][0]["message"]["content"]
+        content_dict = json.loads(content_str)
+        
+        for prop_name in properties.keys():
+            return_dict[prop_name] = content_dict[prop_name]
+        
+        return return_dict
+
