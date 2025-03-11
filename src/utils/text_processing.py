@@ -106,3 +106,11 @@ def format_dictionary_pairs(dictionary: dict, number_of_last_pairs: int = 20) ->
         formatted_pairs += f"Question:{key}. Answer: {value}\n\n"
     
     return formatted_pairs
+
+def format_response_context(response_context: str) -> str:
+    """
+    Format response context for integration into chatbot answer.
+    """
+    
+    
+    return response_context

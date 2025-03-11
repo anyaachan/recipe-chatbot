@@ -27,7 +27,9 @@ class RecipeChatbot:
         
         self.chat_history = []
     
-    def chat(self, user_input: str, use_chat_history: bool = True) -> tuple:
+    def chat(self, user_input: str, 
+             use_chat_history: bool = True,
+             output_context: bool = False) -> tuple:
         """
         Generate response using RAG chain. 
         """

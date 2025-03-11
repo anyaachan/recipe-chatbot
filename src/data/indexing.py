@@ -20,9 +20,9 @@ def load_documents(csv_path: str, metadata_columns: list = None) -> list:
     print(f"Loaded {len(docs)} documents")
     print(f"Maximum document length: {max_length} characters")
     print(f"Found in document index: {max_index}")
-    print("=====================")
-    print("Document with max index contents: ")
-    print(docs[max_index].page_content)
+    # print("=====================")
+    # print("Document with max index contents: ")
+    # print(docs[max_index].page_content)
     
     return docs
 
