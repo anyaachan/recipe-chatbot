@@ -2,7 +2,7 @@
 venv/
 data/
 !data/results/
-!data/results/evaluation_results.csv
+!data/results/evaluation_results_relevancy.csv
 __pycache__/
 models/
 .deepeval
