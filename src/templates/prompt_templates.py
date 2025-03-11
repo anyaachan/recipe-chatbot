@@ -61,25 +61,77 @@ QA_GENERATION_TEMPLATE = """Your task is to generate a question and its correspo
   - COOKING PHASE: Questions about techniques, ingredients, or clarification of steps. Be creative about what kind of questions a user might ask while cooking (e.g., "Kolik [ingredience] potřebuji pro [část receptu]?", "Můžu použít [X] místo [Y] při přípravě tohoto kroku?")
   - SELECTION PHASE: Questions about dietary fit, ingredient requirements, general dish selection, cuisine characteristics, what dishes can be made with certain ingredients, or recipes that fit user preferences (e.g., "Mám [X ingredience] - co z nich mohu dnes uvařit?", "Je tento recept vhodný pro [diet]?")
 - Vary in complexity (some factual, some requiring inference). The questions should not be too simple or obvious.
-- Ensure the questions are **specific and concrete**. **Avoid vague or open-ended questions** that lack a clear reference within the recipe:
-  - **Too vague:** "Jaký typ jídla je tento recept?" (Which type of dish is this recipe?) – *Unclear what "this" refers to.*  
-  - **Specific:** "Jaký typ jídla jsou české knedlíky?" (What type of dish are Czech dumplings?)  
-  - **Too vague:** "Jak dlouho se to vaří?" (How long does it cook?) – *"It" is ambiguous.*  
-  - **Specific:** "Jak dlouho se vaří brambory na bramborový salát?" (How long should the potatoes be cooked for potato salad?) 
+- Ensure the questions are **specific and concrete**. Avoid general or ambiguous questions: 
+  - **Too vague:** "Jak dlouho se to vaří?" (*What does "to" refer to?*)  
+  - **Improved:** "Jak dlouho se vaří brambory na bramborový salát?"  
 - Use natural, conversational language.
 - Avoid mentioning phrases like "according to the passage" or "context" in your question.
 
-## Answer Guidelines
-- Provide complete, accurate answers sourced entirely from the recipe context.
-- Do not repeat the question in the answer.
+## Answer Guidelines:
+- The answer must be **entirely based on the provided context**—do not speculate or include unsupported details.
+- Avoid repeating the question in the answer.
 
 ## Anti-Redundancy Measures
-- Cross-check with existing pairs: 
-{qa_pairs}
-- Avoid duplicate focus areas
-- Prioritize under-represented question types
+- Cross-check with existing QA pairs:  
+  {qa_pairs}  
+- Ensure variation in question types and focus areas.
 
-Now here is the context:
+# Recipe Context:
 {context}
 """
 
+GROUNDNESS_CRITIQUE_PROMPT_TEMPLATE = """
+You will be given a question and a context.  
+Your task is to evaluate how well the question can be answered **exclusively using the given context.**  
+
+### **Rating Scale (1-5):**  
+- **1** → The question is **not answerable** at all based on the context.  
+- **5** → The question is **fully and unambiguously answerable** using the context alone.  
+
+### **Response Format:**  
+Evaluation: Provide a brief explanation of why you assigned this rating.
+Total rating: Provide a number from 1 to 5.
+
+**Question:** {question}  
+**Context:** {context}  
+"""
+
+STANDALONE_CRITIQUE_PROMPT_TEMPLATE = """
+You will be given a question.  
+Your task is to evaluate whether the question **makes sense on its own and can be meaningfully answered without additional context.**  
+
+### **Rating Scale (1-5):**  
+- **1** → The question is **too vague or incomplete** to retrieve a useful answer (e.g., "How long will it take to cook?" without specifying what is being cooked, or "How long should I cook the meat?" without specifying what dish).  
+- **5** → The question is **fully self-contained, clear, and specific**, making it possible to retrieve relevant information (e.g., "How long does it take to cook lentils for a lentil soup?").  
+
+### **Response Format:**  
+Evaluation: Provide a brief explanation of why you assigned this rating.
+Total rating: Provide a number from 1 to 5.
+
+### **Evaluation Criteria:**  
+- Does the question avoid ambiguous references like "this," "it," or "that"?  
+- Is the question **specific enough** to allow retrieval of a meaningful answer?  
+- Can the question be **directly understood and answered**, even without prior conversation?  
+
+**Question:** {question}  
+"""
+
+RELEVANCE_CRITIQUE_PROMPT_TEMPLATE = """
+You will be given a question.  
+Your task is to evaluate **how useful this question is in the context of a recipe-based chatbot.**  
+
+### **Rating Scale (1-5):**  
+- **1** → The question is **not useful** for users seeking cooking or recipe guidance.  
+- **5** → The question is **highly relevant and practical** for recipe selection, cooking guidance, or ingredient usage.  
+
+### **Response Format:**  
+Evaluation: Provide a brief explanation of why you assigned this rating.
+Total rating: Provide a number from 1 to 5.
+
+### **Evaluation Criteria:**  
+- Would a real user find this question helpful?  
+- Does it align with common recipe-related inquiries?  
+- Does it enhance user experience by providing meaningful insights?  
+
+**Question:** {question}  
+"""
