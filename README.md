@@ -1,6 +1,6 @@
 # Recipe Chatbot
 
-A chatbot that uses a Retrieval-Augmented Generation (RAG) pipeline to help users find recipes. Developed as a test-task. 
+A chatbot that uses a Retrieval-Augmented Generation (RAG) pipeline to help users find recipes. Developed as a Case Study task. 
 
 ## Solution Summarization
 Techniques and conclusions that led to the presented solution are thoroughly described in [Summary Notebook](https://github.com/anyaachan/recipe-chatbot/blob/main/notebooks/summary.ipynb).
@@ -15,5 +15,6 @@ To start a chatbot in CLI:
    ```
    OPENROUTER_API_KEY=your_openrouter_api_key
    OPENAI_API_KEY=your_openai_api_key
+   DEEPEVAL_API_KEY=your_deepeval_api_key # Optional - to run the evaluation.ipynb
    ```
 4. Run main.py
