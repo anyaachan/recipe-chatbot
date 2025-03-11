@@ -1,6 +1,11 @@
 .env
 venv/
 data/
-!src/data/
+!data/results/
+!data/results/evaluation_results.csv
 __pycache__/
 models/
+.deepeval
+.deepeval_telemetry.txt
+.temp-deepeval-cache.json
+.deepeval-cache.json
