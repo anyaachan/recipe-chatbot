@@ -31,31 +31,31 @@ def start_chatbot(embeddings):
     """
     chatbot = RecipeChatbot(embeddings)
     provide_context = False
-
-    print("\n\033[1;36mWelcome to the Recipe Chatbot!\033[0m")
-    print("You can ask me about recipes, ingredients, or cooking techniques.")
-    print("Type 'exit' to end the conversation, 'help' for more options, or 'provide_context' to toggle context display.\n")
+    
+    print("\n\033[1;36mVítejte u Chatbota receptů!\033[0m")
+    print("Můžete se mě zeptat na recepty, ingredience nebo kuchařské techniky.")
+    print("Zadejte 'exit' pro ukončení rozhovoru, 'help' pro nápovědu, nebo 'provide_context' pro přepnutí zobrazení kontextu.\n")
     
     while True:
         try:
-            user_input = input("\033[1;32mYou:\033[0m ")
+            user_input = input("\033[1;32mVy:\033[0m ")
             
             if user_input.lower() == "exit":
-                print("\033[1;36mGoodbye! Happy cooking!\033[0m")
+                print("\033[1;36mNashledanou! Přeji příjemné vaření!\033[0m")
                 break
             
             elif user_input.lower() == "help":
-                print("\n\033[1;33mAvailable commands:\033[0m")
-                print("- 'exit': End the conversation.")
-                print("- 'help': Show this help message.")
-                print("- 'provide_context': Toggle context display after the answer.")
-                print("- You can also ask me anything related to recipes, ingredients, or cooking techniques.")
+                print("\n\033[1;33mDostupné příkazy:\033[0m")
+                print("- 'exit': Ukončí rozhovor.")
+                print("- 'help': Zobrazí tuto nápovědu.")
+                print("- 'provide_context': Přepne zobrazení kontextu po odpovědi.")
+                print("- Můžete se také ptát na cokoli, co se týká receptů, ingrediencí nebo kuchařských technik.")
                 continue
             
             elif user_input.lower() == "provide_context":
                 provide_context = not provide_context
-                status = "enabled" if provide_context else "disabled"
-                print(f"\033[1;33mContext display {status}.\033[0m")
+                status = "zapnuto" if provide_context else "vypnuto"
+                print(f"\033[1;33mZobrazení kontextu {status}.\033[0m")
                 continue
             
             response = chatbot.chat(user_input)
@@ -64,14 +64,14 @@ def start_chatbot(embeddings):
                 contexts = response["context"]
                 for i, context in enumerate(contexts):
                     formatted_context = format_context(context.page_content)
-                    print(f"\033[1;30m{i + 1}. Context Retrieved:\033[0m\n{formatted_context}")
+                    print(f"\033[1;30m{i + 1}. Získaný kontext:\033[0m\n{formatted_context}")
         
         except KeyboardInterrupt:
-            print("\n\033[1;36mGoodbye! Happy cooking!\033[0m")
+            print("\n\033[1;36mNashledanou! Přeji příjemné vaření!\033[0m")
             sys.exit(0)
         except Exception as e:
-            print(f"\n\033[1;31mAn error occurred: {e}\033[0m")
-            print("Please try again or type 'exit' to quit.")
+            print(f"\n\033[1;31mDošlo k chybě: {e}\033[0m")
+            print("Zkuste to prosím znovu, nebo zadejte 'exit' pro ukončení.")
             
 
 def main():
