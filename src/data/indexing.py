@@ -28,18 +28,23 @@ def load_documents(csv_path: str, metadata_columns: list = None) -> list:
 
 def create_vector_store(docs: list, embedding_model, db_path=CHROMA_DB_PATH):
     """
-    Create Chroma vector database from documents.
+    Create or load Chroma vector database from documents.
     """
-    print("Creating vector store...")
-    os.makedirs(db_path, exist_ok=True)
-    
-    vectorstore = Chroma.from_documents(
-        documents=docs,
-        embedding=embedding_model,
-        persist_directory=db_path
-    )
-    
-    print(f"Created vector store at {db_path}")
+    if os.path.exists(db_path) and os.listdir(db_path):
+        print(f"Vector store already exists at {db_path}. Loading existing vector store...")
+        vectorstore = load_vector_store(embedding_model, db_path)
+    else:
+        print("Creating vector store...")
+        os.makedirs(db_path, exist_ok=True)
+        
+        vectorstore = Chroma.from_documents(
+            documents=docs,
+            embedding=embedding_model,
+            persist_directory=db_path
+        )
+        
+        print(f"Created vector store at {db_path}")
+        
     return vectorstore
 
 def load_vector_store(embedding_model, db_path=CHROMA_DB_PATH):

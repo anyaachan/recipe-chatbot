@@ -2,6 +2,7 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain.chains import create_retrieval_chain
 from langchain.chains.combine_documents import create_stuff_documents_chain
+import json 
 
 from src.data.indexing import load_vector_store
 from src.config import OPENAI_API_KEY, DEFAULT_LLM_MODEL
@@ -28,8 +29,7 @@ class RecipeChatbot:
         self.chat_history = []
     
     def chat(self, user_input: str, 
-             use_chat_history: bool = True,
-             output_context: bool = False) -> tuple:
+             use_chat_history: bool = True) -> tuple:
         """
         Generate response using RAG chain. 
         """
@@ -46,8 +46,7 @@ class RecipeChatbot:
         if use_chat_history:
             self.chat_history.append(("user", user_input))
             self.chat_history.append(("assistant", response["answer"]))
-        
         return {
             "answer": response["answer"],
-            "context": response["context"][0].page_content
+            "context": response["context"]
             }

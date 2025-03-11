@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import re
 import pandas as pd
+import json 
 
 def clean_html_tags(data: str) -> str:
     """
@@ -107,10 +108,40 @@ def format_dictionary_pairs(dictionary: dict, number_of_last_pairs: int = 20) ->
     
     return formatted_pairs
 
-def format_response_context(response_context: str) -> str:
+def parse_context(context_str: str) -> dict:
     """
-    Format response context for integration into chatbot answer.
+    Parse the context string into a dictionary.
     """
-    
-    
-    return response_context
+    context = {}
+    lines = context_str.split('\n')
+    for line in lines:
+        if line.startswith("recipe_name:"):
+            context["recipe_name"] = line.replace("recipe_name:", "").strip()
+        elif line.startswith("author_name:"):
+            context["author_name"] = line.replace("author_name:", "").strip()
+        elif line.startswith("ingredients:"):
+            context["ingredients"] = line.replace("ingredients:", "").strip()
+        elif line.startswith("steps:"):
+            steps_str = line.replace("steps:", "").strip()
+            steps_list = re.findall(r"'(.*?)'", steps_str)
+            context["steps"] = steps_list
+            
+    return context
+
+def format_context(context) -> str:
+    """
+    Format the context dictionary into a user-friendly format.
+    """
+    context = parse_context(context)
+    formatted_context = ""
+    if "recipe_name" in context:
+        formatted_context += f"\033[1;30mRecipe Name:\033[1;30m{context['recipe_name']}\n"
+    if "author_name" in context:
+        formatted_context += f"\033[1;30mAuthor Name:\033[1;30m{context['author_name']}\n"
+    if "ingredients" in context:
+        formatted_context += f"\033[1;30mIngredients:\033[1;30m{context['ingredients']}\n"
+    if "steps" in context:
+        formatted_context += "\033[1;30mSteps:\033[1;30m\n"
+        for i, step in enumerate(context["steps"], 1):
+            formatted_context += f"  {i}. {step}\n"
+    return formatted_context

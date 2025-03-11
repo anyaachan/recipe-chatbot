@@ -4,11 +4,10 @@ import pandas as pd
 from textwrap import fill
 from src.config import INPUT_DATA_DIR, PROCESSED_DATA_DIR
 from src.utils.embeddings import get_embedding_model
-from src.utils.text_processing import format_response_context
+from src.utils.text_processing import format_context
 from src.data.indexing import load_documents, create_vector_store
 from src.data.preprocessing import preprocess_csv
 from src.chatbot import RecipeChatbot
-from src.utils.generation import call_llm_openrouter
 
 def preprocess_data(input_file_path, output_file_path):
     """
@@ -31,10 +30,11 @@ def start_chatbot(embeddings):
     Start the chatbot in CLI. 
     """
     chatbot = RecipeChatbot(embeddings)
-    
+    provide_context = False
+
     print("\n\033[1;36mWelcome to the Recipe Chatbot!\033[0m")
     print("You can ask me about recipes, ingredients, or cooking techniques.")
-    print("Type 'exit' to end the conversation, or 'help' for more options.\n")
+    print("Type 'exit' to end the conversation, 'help' for more options, or 'provide_context' to toggle context display.\n")
     
     while True:
         try:
@@ -43,15 +43,28 @@ def start_chatbot(embeddings):
             if user_input.lower() == "exit":
                 print("\033[1;36mGoodbye! Happy cooking!\033[0m")
                 break
+            
             elif user_input.lower() == "help":
                 print("\n\033[1;33mAvailable commands:\033[0m")
                 print("- 'exit': End the conversation.")
                 print("- 'help': Show this help message.")
+                print("- 'provide_context': Toggle context display after the answer.")
                 print("- You can also ask me anything related to recipes, ingredients, or cooking techniques.")
                 continue
             
+            elif user_input.lower() == "provide_context":
+                provide_context = not provide_context
+                status = "enabled" if provide_context else "disabled"
+                print(f"\033[1;33mContext display {status}.\033[0m")
+                continue
+            
             response = chatbot.chat(user_input)
-            print(f"\n\033[1;34mChatbot:\033[0m {fill(response['answer'])}")
+            print(f"\n\033[1;34mChatbot:\033[0m {response['answer']}")
+            if provide_context:
+                contexts = response["context"]
+                for i, context in enumerate(contexts):
+                    formatted_context = format_context(context.page_content)
+                    print(f"\033[1;30m{i + 1}. Context Retrieved:\033[0m\n{formatted_context}")
         
         except KeyboardInterrupt:
             print("\n\033[1;36mGoodbye! Happy cooking!\033[0m")
