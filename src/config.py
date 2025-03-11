@@ -5,6 +5,7 @@ load_dotenv()
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPEVAL_API_KEY = os.getenv("DEEPEVAL_API_KEY")
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -16,6 +17,7 @@ CHROMA_DB_PATH = os.getenv("CHROMA_DB_PATH") or os.path.join(DATA_DIR, "chroma_d
 
 DEFAULT_EMBEDDING_MODEL = "intfloat/multilingual-e5-large-instruct"
 DEFAULT_LLM_MODEL = "gpt-4o"
+DEFAULT_QA_MODEL = "google/gemini-2.0-flash-001"
 
 os.makedirs(PROCESSED_DATA_DIR, exist_ok=True)
 os.makedirs(MODELS_DIR, exist_ok=True)
