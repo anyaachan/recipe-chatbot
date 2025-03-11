@@ -13,12 +13,10 @@ def preprocess_csv(df: pd.DataFrame, output_path: str) -> None:
         df[column] = df[column].apply(remove_hashtags)
     
     df["steps"] = df["steps"].str.replace('\r\n', '\n')
+    df["steps"] = df["steps"].str.replace('\xa0', ' ')
     df["steps"] = df["steps"].str.replace(r'\n\s*\n+', '\n\n', regex=True)
     df["steps"] = df["steps"].apply(split_steps, args=([r"\.,", r"\n\n", r"\n"],))
     
     df_for_rag = df.copy()
-    
-    if "author_note" in df_for_rag.columns:
-        df_for_rag.drop(columns=["author_note"], inplace=True)
     
     df_for_rag.to_csv(output_path, index=False)

@@ -1,11 +1,12 @@
 
 import requests
-from src.config import OPENROUTER_API_KEY
+from src.config import OPENROUTER_API_KEY, DEFAULT_QA_MODEL
 import json
+import aiohttp
 
 def call_llm_openrouter(prompt:str, 
-                        model_name:str,
-                        json_schema:dict=None) -> str:
+                        model_name:str = DEFAULT_QA_MODEL,
+                        schema:dict=None) -> str:
     """
     Call the OpenRouter API to generate text from a prompt using given model and optional schema.
     """
@@ -20,8 +21,8 @@ def call_llm_openrouter(prompt:str,
         "messages": [{"role": "user", "content": prompt}]
         }
             
-    if json_schema is not None:
-        for prop_name, description in json_schema.items():
+    if schema is not None:
+        for prop_name, description in schema.items():
             properties[prop_name] = {
                 "type": "string",
                 "description": description
@@ -40,9 +41,8 @@ def call_llm_openrouter(prompt:str,
                     }
                 }
             }
-    
-    print(list(properties.keys()))
-    print(payload)
+    # print(list(properties.keys()))
+    # print(payload)
     response = requests.post(
         "https://openrouter.ai/api/v1/chat/completions", 
         headers=headers, 
@@ -50,7 +50,7 @@ def call_llm_openrouter(prompt:str,
         )
     response.raise_for_status()
     
-    if json_schema is None:
+    if schema is None:
         return response.json()["choices"][0]["message"]["content"]
     else:
         return_dict = {}
@@ -61,4 +61,3 @@ def call_llm_openrouter(prompt:str,
             return_dict[prop_name] = content_dict[prop_name]
         
         return return_dict
-

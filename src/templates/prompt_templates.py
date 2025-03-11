@@ -88,10 +88,6 @@ Your task is to evaluate how well the question can be answered **exclusively usi
 - **1** → The question is **not answerable** at all based on the context.  
 - **5** → The question is **fully and unambiguously answerable** using the context alone.  
 
-### **Response Format:**  
-Evaluation: Provide a brief explanation of why you assigned this rating.
-Total rating: Provide a number from 1 to 5.
-
 **Question:** {question}  
 **Context:** {context}  
 """
@@ -103,10 +99,6 @@ Your task is to evaluate whether the question **makes sense on its own and can b
 ### **Rating Scale (1-5):**  
 - **1** → The question is **too vague or incomplete** to retrieve a useful answer (e.g., "How long will it take to cook?" without specifying what is being cooked, or "How long should I cook the meat?" without specifying what dish).  
 - **5** → The question is **fully self-contained, clear, and specific**, making it possible to retrieve relevant information (e.g., "How long does it take to cook lentils for a lentil soup?").  
-
-### **Response Format:**  
-Evaluation: Provide a brief explanation of why you assigned this rating.
-Total rating: Provide a number from 1 to 5.
 
 ### **Evaluation Criteria:**  
 - Does the question avoid ambiguous references like "this," "it," or "that"?  
@@ -123,10 +115,6 @@ Your task is to evaluate **how useful this question is in the context of a recip
 ### **Rating Scale (1-5):**  
 - **1** → The question is **not useful** for users seeking cooking or recipe guidance.  
 - **5** → The question is **highly relevant and practical** for recipe selection, cooking guidance, or ingredient usage.  
-
-### **Response Format:**  
-Evaluation: Provide a brief explanation of why you assigned this rating.
-Total rating: Provide a number from 1 to 5.
 
 ### **Evaluation Criteria:**  
 - Would a real user find this question helpful?  
